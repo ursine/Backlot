@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/backlot.iml" filepath="$PROJECT_DIR$/backlot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/characters_main.iml" filepath="$PROJECT_DIR$/.idea/modules/characters_main.iml" group="characters" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/characters_test.iml" filepath="$PROJECT_DIR$/.idea/modules/characters_test.iml" group="characters" />
     </modules>
   </component>
 </project>
