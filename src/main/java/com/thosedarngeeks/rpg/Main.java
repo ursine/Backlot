@@ -1,5 +1,9 @@
 package com.thosedarngeeks.rpg;
 
+import com.thosedarngeeks.telnet.TelnetServerInitializer;
+import io.netty.channel.*;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.netty.util.Version;
@@ -10,10 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -28,37 +28,50 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 public class Main {
 
+    Logger logger = LoggerFactory.getLogger(Main.class);
+
     public Options createOptions() {	
-	final Options options = new Options();
+    	final Options options = new Options();
 	
-	options.addOption("d", "directory", true, "Directory to store metadata about the game world in progress");
-	options.addOption("v", "verbose", false, "Be extra verbose in the logging");
+	    options.addOption("d", "directory", true, "Directory to store metadata about the game world in progress");
+	    options.addOption("v", "verbose", false, "Be extra verbose in the logging");
 	
         return options;
     }
 
     public void run() throws Exception {
-	EventLoopGroup bossGroup = new NioEventLoopGroup();
-	EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-	try {
+        try {
 
-	    ServerBootstrap b = new ServerBootstrap();
-	    b.group(bossGroup, workerGroup)
-		.channel(NioServerSocketChannel.class);
+            ServerBootstrap b = new ServerBootstrap();
+            b.option(ChannelOption.SO_BACKLOG, 1024);
+            b.group(bossGroup, workerGroup);
+            b.channel(NioServerSocketChannel.class);
+            b.handler(new LoggingHandler(LogLevel.INFO));
+            b.childHandler(new TelnetServerInitializer());
+            int PORT = 3123;
 
-	    
-	} finally {
-	    workerGroup.shutdownGracefully();
-	    bossGroup.shutdownGracefully();
-	}
-	       
-	
+            Channel ch = b.bind(PORT).sync().channel();
+
+            logger.info("Open your web browser and navigate to " +
+                    "127.0.0.1:" + PORT + '/');
+
+            ch.closeFuture().sync();
+
+        } finally {
+            workerGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();
+        }
+
+
     }
     
     public static void main(String[] args) {
-	Logger logger = LoggerFactory.getLogger(Main.class);
-	logger.info("Starting world...");
+        Logger logger = LoggerFactory.getLogger(Main.class);
+
+        logger.info("Starting world...");
 
 	// TODO: Get the database versions
 	// "select value from information_schema.settings where name = 'info.VERSION';" 

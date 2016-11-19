@@ -1,4 +1,4 @@
-package com.thosedarngeeks.rpg;
+package com.thosedarngeeks.telnet;
 
 public class Telnet {
 
