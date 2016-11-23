@@ -14,3 +14,7 @@ hs_err_pid*
 # Ignore gradle stuff
 build
 .gradle
+
+# Ignore emacs backups
+*~
+

@@ -1,0 +1,47 @@
+# This is really graphql
+# Int, Float, String, Boolean, ID
+
+type Player {
+    fullName: String
+    email: String!
+    birthday: Float
+    location: String
+    gender: String
+    lastOn: Float
+    firstOn: Float
+    characters: [Character]!
+}
+
+type Character {
+    player: [Player]!
+    name: String!
+    created: Float!
+    lastPlayed: Float
+    description: Float
+    birthday: Float
+    template: CharacterTemplate
+}
+
+type CharacterTemplate {
+    name: String!
+}
+
+enum ValidCoreType {
+    INTEGER
+    DECIMAL
+    STRING
+    BOOLEAN
+}
+
+type ValidType {
+    name: String!
+    type: ValidCoreType!
+}
+
+type Attribute {
+    name: String!
+    description: String!
+    type: ValidType
+}
+
+
