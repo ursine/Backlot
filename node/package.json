@@ -1,0 +1,17 @@
+{
+  "name": "backlot",
+  "version": "0.0.1",
+  "description": "An online game engine for RP",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "dependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2"
+  },
+  "devDependencies": {},
+  "private": true,
+  "author": "Gary Coulbourne <bear@bears.org>",
+  "license": "GPL-3.0"
+}
