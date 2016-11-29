@@ -33,6 +33,7 @@ var logger = new(winston.Logger)({
 // Set up requirements
 var events = require('events');
 var fs = require('fs');
+var path = require('path');
 
 process.chdir(__dirname);
 
@@ -45,15 +46,27 @@ var backlot = {
 
         logger.info('Alerting modules that initialization is complete');
         backlot.emit('init');
-        
+
     },
 
     loadI18NStrings: function() {
-        var i18n = fs.readdirSync('./i18n');
-        logger.info(typeof i18n);
-        for(var i=0; i < i18n.length; i++) {
-            logger.log('info', 'Loading I18N strings for %s', i18n[i]);
-        }
+      const loadStartTm = process.hrtime();
+      const directory = './i18n';
+      const i18n = fs.readdirSync(directory);
+      for(let i=0; i < i18n.length; i++) {
+        const modName = i18n[i];
+        const theFile = path.join(directory, modName);
+        const fileDetails = path.parse(theFile);
+
+        // Throw away non-javascript files
+        if (fileDetails.ext != '.js') continue;
+
+        const baseName = fileDetails.name;        
+
+
+        const loadEndTm = process.hrtime(loadStartTm);
+        logger.log('info', 'Loaded I18N strings for %s from %s: %ds %dms', baseName, theFile, loadEndTm[0], loadEndTm[1]/1000000);
+      }
     },
 
     loadModules: function() {
