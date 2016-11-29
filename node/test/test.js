@@ -1,8 +1,10 @@
 var assert = require('assert');
-describe('Array', function() {
-    describe('#indexOf()', function() {
-	it('should return -1 when the value is not present', function() {
-	    assert.equal(-1, [1,2,3].indexOf(4));
+var utils = require('../libs/utils.js');
+
+/*describe('Utilities', function() {
+    describe('stripEnding', function() {
+	it('Check to see if the function actually strips endings', function() {
+	    assert.equal( utils.stripEnding('houses','s'), 'house' );
 	});
     });
-});
+});*/
