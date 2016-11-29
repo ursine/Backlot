@@ -18,6 +18,5 @@
 */
 
 module.exports = {
-	
-	
+    LanguageTag: 'en-US'   	
 };

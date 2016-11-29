@@ -46,7 +46,6 @@ var backlot = {
 
         logger.info('Alerting modules that initialization is complete');
         backlot.emit('init');
-
     },
 
     loadI18NStrings: function() {
@@ -55,17 +54,27 @@ var backlot = {
       const i18n = fs.readdirSync(directory);
       for(let i=0; i < i18n.length; i++) {
         const modName = i18n[i];
-        const theFile = path.join(directory, modName);
+        const theFile = path.join(__dirname, directory, modName);
         const fileDetails = path.parse(theFile);
 
         // Throw away non-javascript files
         if (fileDetails.ext != '.js') continue;
 
-        const baseName = fileDetails.name;        
+        const baseName = fileDetails.name;
 
+        // Is this being reloaded
+        const reloaded = typeof(global[baseName]) != 'undefined';
+        const loadType = reloaded ? 'Reloaded' : 'Loaded';
+
+        if (reloaded) {
+          delete require.cache[require.resolve(theFile)];
+        }
+        global[baseName] = require(theFile);
+
+        const theLangTag = global[baseName].LanguageTag;
 
         const loadEndTm = process.hrtime(loadStartTm);
-        logger.log('info', 'Loaded I18N strings for %s from %s: %ds %dms', baseName, theFile, loadEndTm[0], loadEndTm[1]/1000000);
+        logger.log('info', '%s I18N strings for %s(%s) from %s: %ds %dms', loadType, baseName, theLangTag, theFile, loadEndTm[0], loadEndTm[1]/1000000);
       }
     },
 
