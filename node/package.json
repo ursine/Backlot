@@ -1,22 +1,35 @@
 {
-  "name": "backlot",
-  "version": "0.0.1",
-  "description": "An online game engine for RP",
-  "main": "index.js",
-  "scripts": {
-	  "test": "./node_modules/.bin/mocha --reporter spec"
-  },
-  "devDependencies": {
-	  "chai": "^3.5.0",
-	  "mocha": "^3.1.2"
-  },
-  "dependencies": {
+    "name": "backlot",
+    "version": "0.0.1",
+    "description": "An online game engine for RP",
+    "main": "index.js",
+    "scripts": {
+	"test": "./node_modules/.bin/mocha --reporter spec"
+    },
+    "devDependencies": {
+	"chai": "^3.5.0",
+	"mocha": "^3.1.2"
+    },
+    "dependencies": {
   	"winston": "^2.3.0"
-  },
-  "private": true,
-  "author": "Gary Coulbourne <bear@bears.org>",
-  "license": "GPLv3",
-  "keywords": [
-    "Game", "Engine", "Social", "MUD"
-  ]
+    },
+    "private": true,
+    "author": "Gary Coulbourne <bear@bears.org>",
+    "license": "GPLv3",
+    "keywords": [
+	"Game", "Engine", "Social", "MUD"
+    ],
+    
+    "eslintConfig": {
+	"rules": {
+	    "semi": ["error", "always"]
+	},
+	"parserOptions": {
+            "ecmaVersion": 6
+	},
+	"env": {
+	    "node": true
+	},
+	"extends": "standard"
+    }
 }
