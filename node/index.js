@@ -17,35 +17,37 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
+/*jshint esversion: 6 */
+
 "use strict";
 
 // Set up local logging
-var winston = require('winston');
-var logger = new(winston.Logger)({
+const winston = require("winston");
+const logger = new(winston.Logger)({
     transports: [
         new(winston.transports.Console)({
-            'timestamp': true,
-            'colorize': true
+            "timestamp": true,
+            "colorize": true
         })
     ]
 });
 
 // Set up requirements
-var events = require('events');
-var fs = require('fs');
-var path = require('path');
+const events = require("events");
+const fs = require("fs");
+const path = require("path");
 
 process.chdir(__dirname);
 
-logger.info('Starting Backlot server process');
+logger.info("Starting Backlot server process");
 
-var backlot = {
+const backlot = {
 
     init: function() {
         this.loadI18NStrings();
 
-        logger.info('Alerting modules that initialization is complete');
-        backlot.emit('init');
+        logger.info("Alerting modules that initialization is complete");
+        backlot.emit("init");
     },
 
     loadI18NStrings: function() {
