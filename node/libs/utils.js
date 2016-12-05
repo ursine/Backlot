@@ -17,18 +17,46 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
-"use strict";
+'use strict';
 
-var fs = require('fs');
+const fs = require('fs');
+const path = require('path');
 
+module.exports.loadModules = function(directory, logger) {
+  const loadStartTm = process.hrtime();
+  const dirList = fs.readdirSync(directory);
+  for (let i = 0; i < dirList.length; i++) {
+    const modName = dirList[i];
+    const theFile = path.join(directory, modName);
+    const fileDetails = path.parse(theFile);
 
+    // Throw away non-javascript files
+    if (fileDetails.ext !== '.js') {
+      continue;
+    }
 
+    const baseName = fileDetails.name;
 
-/*getFilenames = function(path) {
-    fs.readdirSync(path).filter(
-	function(i) { return i.toLowerCase().match(/\.js$/) }
-    ).map(
-	function(i) { return i.replace(/\.[^/.]+$/, "") }
-    )
-};*/
+    // Is this being reloaded
+    const reloaded = typeof (global[baseName]) !== 'undefined';
+    const loadType = reloaded ? 'Reloaded' : 'Loaded';
+
+    if (reloaded) {
+      delete require.cache[require.resolve(theFile)];
+    }
+    global[baseName] = require(theFile);
+
+    const moduleBase = global[baseName];
+    const moduleName = moduleBase.moduleName;
+
+    let typeString = 'unknown';
+    if (moduleBase.moduleType == 'language') {
+      typeString = 'I18N strings'
+    }
+
+    const loadEndTm = process.hrtime(loadStartTm);
+    logger.log('info', '%s %s for %s(%s) from %s: %ds %dms',
+      loadType, baseName, typeString, moduleName, theFile, loadEndTm[0], loadEndTm[1] / 1000000);
+  }
+};
 

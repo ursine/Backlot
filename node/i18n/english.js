@@ -18,5 +18,7 @@
 */
 
 module.exports = {
-    LanguageTag: 'en-US'   	
+  languageTag: 'en-US',
+  moduleName: 'English/US',
+  moduleType: 'language'
 };

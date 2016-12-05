@@ -36,6 +36,7 @@
   const fs = require('fs');
   const path = require('path');
   const util = require('util');
+  const utils = require('./libs/utils.js');
 
   process.chdir(__dirname);
 
@@ -53,37 +54,9 @@
     backlot.emit('init');
   };
 
-  Backlot.prototype.loadI18NStrings = function () {
-    const loadStartTm = process.hrtime();
-    const directory = './i18n';
-    const i18n = fs.readdirSync(directory);
-    for (let i = 0; i < i18n.length; i++) {
-      const modName = i18n[i];
-      const theFile = path.join(__dirname, directory, modName);
-      const fileDetails = path.parse(theFile);
-
-      // Throw away non-javascript files
-      if (fileDetails.ext !== '.js') {
-        continue;
-      }
-
-      const baseName = fileDetails.name;
-
-      // Is this being reloaded
-      const reloaded = typeof (global[baseName]) !== 'undefined';
-      const loadType = reloaded ? 'Reloaded' : 'Loaded';
-
-      if (reloaded) {
-        delete require.cache[require.resolve(theFile)];
-      }
-      global[baseName] = require(theFile);
-
-      const theLangTag = global[baseName].LanguageTag;
-
-      const loadEndTm = process.hrtime(loadStartTm);
-      logger.log('info', '%s I18N strings for %s(%s) from %s: %ds %dms', loadType, baseName, theLangTag, theFile, loadEndTm[0], loadEndTm[1] / 1000000);
-    }
-  };
+  Backlot.prototype.loadI18NStrings = function() {
+    utils.loadModules(path.join(__dirname,'i18n'), logger);
+  }
 
   Backlot.prototype.die = function () {
     logger.warn('Starting to shutdown server');
