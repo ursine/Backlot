@@ -33,7 +33,6 @@
 
   // Set up requirements
   const events = require('events');
-  const fs = require('fs');
   const path = require('path');
   const util = require('util');
   const utils = require('./libs/utils.js');
@@ -42,7 +41,6 @@
 
   logger.info('Starting Backlot server process');
 
-
   const Backlot = function () {
     events.EventEmitter.call(this);
   };
@@ -50,6 +48,7 @@
 
   Backlot.prototype.init = function () {
     this.loadI18NStrings();
+    this.loadModules();
     logger.info('Alerting modules that initialization is complete');
     backlot.emit('init');
   };
@@ -58,6 +57,10 @@
     utils.loadModules(path.join(__dirname,'i18n'), logger);
   }
 
+  Backlot.prototype.loadModules = function() {
+    utils.loadModules(path.join(__dirname, 'modules'), logger);
+  }
+    
   Backlot.prototype.die = function () {
     logger.warn('Starting to shutdown server');
     process.exit();

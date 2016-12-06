@@ -18,9 +18,8 @@
 */
 
 module.exports = {
-  languageTag: 'en-US',
-  moduleName: 'English/US',
-    moduleType: 'language',
+    moduleName: 'Telnet Server',
+    moduleType: 'service',
 
     onInit: function() {
     }

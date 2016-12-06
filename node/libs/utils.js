@@ -24,7 +24,15 @@ const path = require('path');
 
 module.exports.loadModules = function(directory, logger) {
   const loadStartTm = process.hrtime();
-  const dirList = fs.readdirSync(directory);
+
+    let dirList = [];
+    try {
+	dirList = fs.readdirSync(directory);
+    }
+    catch(err) {
+	logger.log('error', 'Unable to read directory %s: %s', directory, err);
+    }
+
   for (let i = 0; i < dirList.length; i++) {
     const modName = dirList[i];
     const theFile = path.join(directory, modName);
@@ -37,14 +45,20 @@ module.exports.loadModules = function(directory, logger) {
 
     const baseName = fileDetails.name;
 
-    // Is this being reloaded
-    const reloaded = typeof (global[baseName]) !== 'undefined';
-    const loadType = reloaded ? 'Reloaded' : 'Loaded';
-
-    if (reloaded) {
-      delete require.cache[require.resolve(theFile)];
-    }
-    global[baseName] = require(theFile);
+      // Is this being reloaded
+      const reloaded = typeof (global[baseName]) !== 'undefined';
+      const loadType = reloaded ? 'Reloaded' : 'Loaded';
+      
+      try {
+	  if (reloaded) {
+	      delete require.cache[require.resolve(theFile)];
+	  }
+	  global[baseName] = require(theFile);	  
+      }
+      catch(err) {
+	  logger.log('error', 'Unable to load module %s: %s', theFile, err);
+	  continue;
+      }
 
     const moduleBase = global[baseName];
     const moduleName = moduleBase.moduleName;
@@ -52,10 +66,12 @@ module.exports.loadModules = function(directory, logger) {
     let typeString = 'unknown';
     if (moduleBase.moduleType == 'language') {
       typeString = 'I18N strings'
+    } else if (moduleBase.moduleType == 'service') {
+	typeString = 'providing'
     }
 
     const loadEndTm = process.hrtime(loadStartTm);
-    logger.log('info', '%s %s for %s(%s) from %s: %ds %dms',
+    logger.log('info', '%s %s for %s %s from %s: %ds %dms',
       loadType, baseName, typeString, moduleName, theFile, loadEndTm[0], loadEndTm[1] / 1000000);
   }
 };
