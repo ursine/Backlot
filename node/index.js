@@ -54,11 +54,11 @@
   };
 
   Backlot.prototype.loadI18NStrings = function() {
-    utils.loadModules(path.join(__dirname,'i18n'), logger);
+      utils.loadModules(this, path.join(__dirname,'i18n'), logger);
   }
 
   Backlot.prototype.loadModules = function() {
-    utils.loadModules(path.join(__dirname, 'modules'), logger);
+      utils.loadModules(this, path.join(__dirname, 'modules'), logger);
   }
     
   Backlot.prototype.die = function () {

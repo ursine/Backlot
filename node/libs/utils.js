@@ -22,7 +22,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports.loadModules = function(directory, logger) {
+module.exports.loadModules = function(baseModule, directory, logger) {
   const loadStartTm = process.hrtime();
 
     let dirList = [];
@@ -53,7 +53,9 @@ module.exports.loadModules = function(directory, logger) {
 	  if (reloaded) {
 	      delete require.cache[require.resolve(theFile)];
 	  }
-	  global[baseName] = require(theFile);	  
+	  module = require(theFile);
+	  global[baseName] = module;
+	  baseModule.on('init', module.onInit);
       }
       catch(err) {
 	  logger.log('error', 'Unable to load module %s: %s', theFile, err);

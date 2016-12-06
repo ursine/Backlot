@@ -20,8 +20,10 @@
 module.exports = {
   languageTag: 'en-US',
   moduleName: 'English/US',
-    moduleType: 'language',
+  moduleType: 'language',
 
-    onInit: function() {
-    }
+  onInit: function() {
+      console.log("English language handler initialized");
+  }
+
 };
