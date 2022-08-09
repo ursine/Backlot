@@ -7,11 +7,11 @@
 #include <SDL.h>
 #include <SDL_vulkan.h>
 
-#include <vulkan.hpp>
+#include <vulkan/vk_icd.h>
 
 int main(int argc, char* argv[])
 {
-    VkExtent2D _windowExtent{ 1700 , 900 };
+    VkExtent2D _windowExtent{ 640 , 400 };
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -25,6 +25,22 @@ int main(int argc, char* argv[])
             _windowExtent.height, //window height in pixels
             window_flags
     );
+
+    SDL_Event e;
+    bool bQuit = false;
+
+    //main loop
+    while (!bQuit)
+    {
+        //Handle events on queue
+        while (SDL_PollEvent(&e) != 0)
+        {
+            //close the window when user clicks the X button or alt-f4s
+            if (e.type == SDL_QUIT) bQuit = true;
+        }
+
+        //draw();
+    }
 
     return EXIT_SUCCESS;
 }

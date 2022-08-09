@@ -12,6 +12,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # add the executable
 add_executable(Tutorial src/main.cpp)
-
-target_link_libraries(Tutorial SDL2::SDL2 Vulkan::Vulkan)
+target_include_directories(Tutorial SYSTEM PUBLIC ${Vulkan_INCLUDE_DIRS})
+target_link_libraries(Tutorial PUBLIC SDL2::SDL2 Vulkan::Vulkan)
 
