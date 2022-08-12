@@ -9,6 +9,7 @@
 #include <SDL.h>
 #include <SDL_vulkan.h>
 #include <vulkan/vulkan.h>
+#include "vulkan.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanReportFunc(
         VkDebugReportFlagsEXT flags,
@@ -45,29 +46,7 @@ int main(int argc, char* argv[])
     std::vector<const char*> extensionNames(extensionCount);
     SDL_Vulkan_GetInstanceExtensions(window, &extensionCount, extensionNames.data());
 
-    const std::vector<const char*> validationLayers = {
-            ///has bug
-            //"VK_LAYER_LUNARG_standard_validation"
-    };
-
-    VkApplicationInfo appInfo = {};
-    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.pApplicationName = window_name;
-    appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.pEngineName = "No Engine";
-    appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.apiVersion = VK_API_VERSION_1_0;
-
-    VkInstanceCreateInfo instanceCreateInfo = {};
-    instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    instanceCreateInfo.pApplicationInfo = &appInfo;
-    instanceCreateInfo.enabledLayerCount = validationLayers.size();
-    instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
-    instanceCreateInfo.enabledExtensionCount = extensionNames.size();
-    instanceCreateInfo.ppEnabledExtensionNames = extensionNames.data();
-
-    VkInstance instance;
-    vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
+    Vulkan& v = Vulkan::instance();
 
     auto SDL2_vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)SDL_Vulkan_GetVkGetInstanceProcAddr();
 
@@ -77,14 +56,7 @@ int main(int argc, char* argv[])
     debugCallbackCreateInfo.pfnCallback = VulkanReportFunc;
 
     VkDebugReportCallbackEXT debugCallback;
-    SDL2_vkCreateDebugReportCallbackEXT(instance, &debugCallbackCreateInfo, 0, &debugCallback);
-
-
-
-
-
-
-
+    SDL2_vkCreateDebugReportCallbackEXT(*v.vulkan(), &debugCallbackCreateInfo, 0, &debugCallback);
 
     SDL_Event e;
     bool bQuit = false;
