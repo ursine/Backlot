@@ -11,8 +11,15 @@ if __name__ == '__main__':
 
     response = s3.list_objects_v2(
         Bucket='noaa-nexrad-level2',
-        Delimiter='/'
+        Delimiter='/',
+        Prefix='2022/01/01/KGLD/'
     )
 
     print(response)
-    
+
+
+# https://graphical.weather.gov/xml/
+# /Year/Month/Day/NEXRAD Station/filename
+# aws s3 ls --recursive s3://noaa-nexrad-level2/2010/01/01/`
+
+# https://gis.ncdc.noaa.gov/kml/nexrad.kmz

@@ -6,7 +6,9 @@
 
 #include <memory>
 #include <vector>
+#include <iostream>
 #include <vulkan/vulkan_core.h>
+#include <vulkan/vulkan.hpp>
 
 class Vulkan {
 private:
@@ -42,8 +44,11 @@ private:
         result = vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
         if (result != VK_SUCCESS) {
             // Die
-
         }
+
+        vulkan_extensions = std::make_unique<std::vector<VkExtensionProperties>>(count);
+
+        std::cout << "The Number of Extensions provided by Vulkan is " << vulkan_extensions->size() << std::endl;
 
         std::vector<const char*> extensionNames(0);
 
@@ -52,14 +57,11 @@ private:
                 //"VK_LAYER_LUNARG_standard_validation"
         };
 
-        VkApplicationInfo appInfo = {};
-        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = "unknown";
-        appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = "No Engine";
-        appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VK_MAKE_VERSION(1,0,0);
+        vk::ApplicationInfo appInfo("unknown", VK_MAKE_VERSION(1, 0, 0),
+                                    "No Engine", VK_MAKE_VERSION(1, 0, 0),
+                                    VK_MAKE_VERSION(1,0,0))
 
+        vk::InstanceCreateInfo instanceCreateInfo({}, appInfo);
         VkInstanceCreateInfo instanceCreateInfo = {};
         instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         instanceCreateInfo.pApplicationInfo = &appInfo;
