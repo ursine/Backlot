@@ -9,6 +9,24 @@ import sqlite3
 if __name__ == '__main__':
     print("Creating configuration file with sqlite")
 
+    con = sqlite3.connect("wx_configuration.sql3")
+
+    cur = con.cursor()
+
+    cur.execute("""
+        CREATE TABLE config (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        );
+    """)
+
+    cur.execute("""
+        INSERT INTO config VALUES ("version", "1");
+    """)
+
+    res = cur.execute("SELECT * FROM config")
+    print(res.fetchall())
+
 # ----------------------------------------------------------------------------------------------
 
 # List of stations and locations
@@ -55,3 +73,27 @@ if __name__ == '__main__':
 # aws s3 ls --recursive s3://noaa-nexrad-level2/2010/01/01/`
 
 # https://gis.ncdc.noaa.gov/kml/nexrad.kmz
+
+CREATE TABLE radar_stations (
+    pk INTEGER PRIMARY KEY,
+    ncdcid INTEGER NOT NULL, -- Unique identifier used by NCEI
+    icaq TEXT NOT NULL,      -- International Civil Aeronautics Organization ID
+    wban INTEGER NOT NULL,   -- Used at NCEI for digital data storage and general station identification purposes
+    name TEXT NOT NULL,      -- Name of station, uppercase, may contain characters, numbers or symbols
+    country TEXT NOT NULL,   -- Name of country, uppercase
+);
+
+ST       2        XX            073-074         USPS two character alphabetic abbreviation for each state, uppercase.
+
+COUNTY   30       X(30)         076-105         Name of county, uppercase.
+
+LAT      9        x99.99999     107-115         Latitude in decimal degrees, where "x" is blank or "-".
+
+LON      10       x999.99999    117-126         Longitude in decimal degrees, where "x" is blank or "-".
+
+ELEV     6        999999        128-133         Station elevation in feet, -99999 if missing.  Elevation is combined elevation of
+                                                ground elevation + tower height + feed horn.
+
+UTC      3        x99           135-139         Time zone, positive or negative offset from UTC, where "x" is "+" or "-".
+
+STNTYPE  50       X(50)         141-190         Type of observing programs associated with the station.
