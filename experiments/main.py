@@ -34,6 +34,9 @@ if __name__ == '__main__':
 # https://api.weather.gov/alerts/active
 
 
+# Alert locations
+# https://www.weather.gov/gis/AWIPSShapefiles
+
 # ----------------------------------------------------------------------------------------------
 
 #    s3 = boto3.client('s3', region_name='us-east-1', config=Config(signature_version=UNSIGNED))
