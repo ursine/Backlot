@@ -1,10 +1,15 @@
+#include <SDL_vulkan.h>
+#include <vulkan/vulkan.h>
 #include "SDL.h"
 #include "SDL_syswm.h"
-#include <SDL_vulkan.h>
-#include <windows.h>
-#include <vulkan/vulkan.h>
-#include <vulkan/vulkan_win32.h>
-#include "spirv-headers/spirv.h"
+
+#ifdef _WIN32
+  #include <windows.h>
+  #include <vulkan/vulkan_win32.h>
+#endif
+
+
+//#include "spirv-headers/spirv.h"
 #include <vector>
 #include <set>
 #include <array>
